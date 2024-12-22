@@ -1,6 +1,22 @@
 package com.rustam.CVFinder.dao.entity.enums;
 
-public enum Role {
+import lombok.Getter;
+import org.springframework.security.core.GrantedAuthority;
 
-    Human_Resource,User
+@Getter
+public enum Role implements GrantedAuthority {
+
+    Human_Resource("HR"),
+    User("User");
+
+    private final String value;
+
+    Role(String value) {
+        this.value = value;
+    }
+
+    @Override
+    public String getAuthority() {
+        return name();
+    }
 }
