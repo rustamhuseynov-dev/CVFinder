@@ -1,6 +1,8 @@
 package com.rustam.CVFinder.controller;
 
+import com.rustam.CVFinder.dto.TokenDTO;
 import com.rustam.CVFinder.dto.request.AuthRequest;
+import com.rustam.CVFinder.dto.request.LoginRequest;
 import com.rustam.CVFinder.dto.response.AuthResponse;
 import com.rustam.CVFinder.service.AuthService;
 import jakarta.validation.Valid;
@@ -27,5 +29,10 @@ public class AuthenticationController {
     @PostMapping(path = "/create-hr")
     public ResponseEntity<AuthResponse> createHumanResource(@Valid @RequestBody AuthRequest authRequest){
         return new ResponseEntity<>(authService.createHumanResource(authRequest),HttpStatus.CREATED);
+    }
+
+    @PostMapping(path = "/login")
+    public ResponseEntity<TokenDTO> login(@Valid @RequestBody LoginRequest loginRequest){
+        return new ResponseEntity<>(authService.login(loginRequest),HttpStatus.ACCEPTED);
     }
 }
