@@ -3,10 +3,12 @@ package com.rustam.CVFinder.dao.entity;
 import com.fasterxml.uuid.Generators;
 import com.fasterxml.uuid.impl.NameBasedGenerator;
 import com.rustam.CVFinder.dao.entity.enums.Role;
+import com.rustam.CVFinder.exception.custom.InvalidUUIDFormatException;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.Set;
 import java.util.UUID;
@@ -24,6 +26,11 @@ import java.util.UUID;
 public class BaseUser {
 
     @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
     UUID id;
     String name;
     String phone;
@@ -38,4 +45,12 @@ public class BaseUser {
     @Enumerated(EnumType.STRING)
     Set<Role> authorities;
 
+
+    public String getId() {
+        if (id != null) {
+            return id.toString();
+        }
+        return null;
+    }
 }
+
