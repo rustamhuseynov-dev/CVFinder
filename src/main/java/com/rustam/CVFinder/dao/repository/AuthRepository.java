@@ -13,6 +13,6 @@ import java.util.UUID;
 @Repository
 public interface AuthRepository extends JpaRepository<BaseUser, UUID> {
 
-    @Query(value = "SELECT * FROM base_users WHERE user_type = 'USER' AND username = :username", nativeQuery = true)
-    Optional<User> findByUsername(String username);
+    @Query(value = "SELECT * FROM base_users WHERE (user_type = 'USER' OR user_type = 'HUMAN_RESOURCE') AND username = :username", nativeQuery = true)
+    Optional<BaseUser> findByUsername(String username);
 }
