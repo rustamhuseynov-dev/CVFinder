@@ -11,6 +11,7 @@ import com.rustam.CVFinder.dto.request.AuthRequest;
 import com.rustam.CVFinder.dto.request.LoginRequest;
 import com.rustam.CVFinder.dto.response.AuthResponse;
 import com.rustam.CVFinder.exception.custom.IncorrectPasswordException;
+import com.rustam.CVFinder.exception.custom.UnauthorizedException;
 import com.rustam.CVFinder.mapper.AuthMapper;
 import com.rustam.CVFinder.util.UtilService;
 import com.rustam.CVFinder.util.jwt.JwtUtil;
@@ -80,5 +81,17 @@ public class AuthService {
         return TokenDTO.builder()
                 .tokenPair(tokenPair)
                 .build();
+    }
+
+    public String logout(String refreshToken) {
+        String userId = jwtUtil.getUserIdAsUsernameFromToken(refreshToken);
+        String redisKey = "refresh_token:" + userId;
+        Boolean delete = redisTemplate.delete(redisKey);
+        if (Boolean.TRUE.equals(delete)){
+            return "The refresh token was deleted and the user was logged out.";
+        }
+        else {
+            throw new UnauthorizedException("An error occurred while logging out.");
+        }
     }
 }
