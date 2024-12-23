@@ -3,6 +3,7 @@ package com.rustam.CVFinder.controller;
 import com.rustam.CVFinder.dto.TokenDTO;
 import com.rustam.CVFinder.dto.request.AuthRequest;
 import com.rustam.CVFinder.dto.request.LoginRequest;
+import com.rustam.CVFinder.dto.request.RefreshTokenRequest;
 import com.rustam.CVFinder.dto.response.AuthResponse;
 import com.rustam.CVFinder.service.AuthService;
 import jakarta.validation.Valid;
@@ -31,6 +32,11 @@ public class AuthenticationController {
     @PostMapping(path = "/login")
     public ResponseEntity<TokenDTO> login(@Valid @RequestBody LoginRequest loginRequest){
         return new ResponseEntity<>(authService.login(loginRequest),HttpStatus.ACCEPTED);
+    }
+
+    @PostMapping(path = "/refresh-token")
+    public ResponseEntity<String> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest){
+        return new ResponseEntity<>(authService.refreshToken(refreshTokenRequest),HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/logout")
