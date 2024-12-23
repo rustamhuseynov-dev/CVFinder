@@ -4,6 +4,7 @@ import com.rustam.CVFinder.dto.response.message.ExceptionResponseMessages;
 import com.rustam.CVFinder.exception.custom.BaseUserNotFoundException;
 import com.rustam.CVFinder.exception.custom.IncorrectPasswordException;
 import com.rustam.CVFinder.exception.custom.InvalidUUIDFormatException;
+import com.rustam.CVFinder.exception.custom.UnauthorizedException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -23,13 +24,13 @@ import java.util.Set;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-//    @ExceptionHandler(UnauthorizedException.class)
-//    public ResponseEntity<ExceptionResponseMessages> handleUnauthorizedException(UnauthorizedException ex) {
-//        return new ResponseEntity<>(
-//                new ExceptionResponseMessages(ex.getClass().getName(), ex.getMessage(), HttpStatus.UNAUTHORIZED) ,
-//                HttpStatus.UNAUTHORIZED
-//        );
-//    }
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ExceptionResponseMessages> handleUnauthorizedException(UnauthorizedException ex) {
+        return new ResponseEntity<>(
+                new ExceptionResponseMessages(ex.getClass().getName(), ex.getMessage(), HttpStatus.UNAUTHORIZED) ,
+                HttpStatus.UNAUTHORIZED
+        );
+    }
 
     @ExceptionHandler(BaseUserNotFoundException.class)
     public ResponseEntity<ExceptionResponseMessages> handleUserNotFoundException(BaseUserNotFoundException ex) {
