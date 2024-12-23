@@ -9,20 +9,24 @@ import com.rustam.CVFinder.dto.TokenDTO;
 import com.rustam.CVFinder.dto.TokenPair;
 import com.rustam.CVFinder.dto.request.AuthRequest;
 import com.rustam.CVFinder.dto.request.LoginRequest;
+import com.rustam.CVFinder.dto.request.RefreshTokenRequest;
 import com.rustam.CVFinder.dto.response.AuthResponse;
 import com.rustam.CVFinder.exception.custom.IncorrectPasswordException;
 import com.rustam.CVFinder.exception.custom.UnauthorizedException;
 import com.rustam.CVFinder.mapper.AuthMapper;
 import com.rustam.CVFinder.util.UtilService;
 import com.rustam.CVFinder.util.jwt.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.Collections;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -92,6 +96,23 @@ public class AuthService {
         }
         else {
             throw new UnauthorizedException("An error occurred while logging out.");
+        }
+    }
+
+    public String refreshToken(RefreshTokenRequest request) {
+        System.out.println(request.getRefreshToken());
+        String refreshToken = request.getRefreshToken().trim();
+        refreshToken = refreshToken.replace("\"", "");
+        String userId = jwtUtil.getUserIdAsUsernameFromToken(refreshToken);
+        if (userId == null) {
+            throw new UnauthorizedException("Invalid refresh token");
+        }
+        String redisKey = "refresh_token:" + userId;
+        String storedRefreshToken = redisTemplate.opsForValue().get(redisKey);
+        if (storedRefreshToken != null && storedRefreshToken.equals(refreshToken)) {
+            return jwtUtil.createToken(userId);
+        } else {
+            throw new UnauthorizedException("Invalid refresh token");
         }
     }
 }
