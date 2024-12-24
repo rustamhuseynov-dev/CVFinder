@@ -40,7 +40,7 @@ public class AuthenticationController {
     }
 
     @DeleteMapping(path = "/logout")
-    public ResponseEntity<String> logout(@RequestBody String refreshToken){
-        return new ResponseEntity<>(authService.logout(refreshToken),HttpStatus.ACCEPTED);
+    public ResponseEntity<String> logout(@RequestBody RefreshTokenRequest request){
+        return new ResponseEntity<>(authService.logout(request),HttpStatus.ACCEPTED);
     }
 }
