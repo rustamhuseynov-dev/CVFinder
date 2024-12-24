@@ -87,7 +87,9 @@ public class AuthService {
                 .build();
     }
 
-    public String logout(String refreshToken) {
+    public String logout(RefreshTokenRequest request) {
+        String refreshToken = request.getRefreshToken().trim();
+        refreshToken = refreshToken.replace("\"", "");
         String userId = jwtUtil.getUserIdAsUsernameFromToken(refreshToken);
         String redisKey = "refresh_token:" + userId;
         Boolean delete = redisTemplate.delete(redisKey);
