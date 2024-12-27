@@ -1,5 +1,7 @@
 package com.rustam.CVFinder.util;
 
+import com.rustam.CVFinder.dto.request.RefreshTokenRequest;
+import com.rustam.CVFinder.service.AuthService;
 import com.rustam.CVFinder.service.UserDetailsServiceImpl;
 import com.rustam.CVFinder.util.jwt.JwtUtil;
 import jakarta.servlet.FilterChain;
@@ -21,13 +23,22 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
+    private final AuthService authService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = jwtUtil.getTokenFromRequest(request);
+        String refreshToken = "";
+        if (token != null){
+            if (!jwtUtil.isValidUserIdFromToken(token)) {
+                refreshToken = String.valueOf(authService.refreshToken(new RefreshTokenRequest(token)));
+            }else {
+                refreshToken = token;
+            }
+        }
 
-        if (token != null && jwtUtil.validateToken(token)) {
-            String userIdAsUsername = jwtUtil.getUserIdAsUsernameFromToken(token);
+        if (refreshToken != null && jwtUtil.validateToken(refreshToken)) {
+            String userIdAsUsername = jwtUtil.getUserIdAsUsernameFromToken(refreshToken);
             UserDetails userDetails = userDetailsService.loadUserByUsername(userIdAsUsername);
 
             if (userDetails != null/* && utilService.getCurrentUserByEmailForAllRole(email).isActivated()*/) {
