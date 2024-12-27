@@ -105,14 +105,14 @@ public class AuthService {
         System.out.println(request.getRefreshToken());
         String refreshToken = request.getRefreshToken().trim();
         refreshToken = refreshToken.replace("\"", "");
-        String userId = jwtUtil.getUserIdAsUsernameFromToken(refreshToken);
+        String userId = jwtUtil.getUserIdAsUsernameFromTokenExpired(refreshToken);
         if (userId == null) {
             throw new UnauthorizedException("Invalid refresh token");
         }
         String redisKey = "refresh_token:" + userId;
         String storedRefreshToken = redisTemplate.opsForValue().get(redisKey);
-        if (storedRefreshToken != null && storedRefreshToken.equals(refreshToken)) {
-            return jwtUtil.createToken(userId);
+        if (storedRefreshToken != null) {
+            return storedRefreshToken;
         } else {
             throw new UnauthorizedException("Invalid refresh token");
         }
