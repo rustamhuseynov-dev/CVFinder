@@ -43,7 +43,6 @@ public class FileService {
                 filteredCvs.add(filePath);
             }
         }
-
         return filteredCvs;
     }
 
