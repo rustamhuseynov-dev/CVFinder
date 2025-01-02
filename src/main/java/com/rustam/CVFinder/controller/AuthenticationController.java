@@ -4,7 +4,9 @@ import com.rustam.CVFinder.dto.TokenDTO;
 import com.rustam.CVFinder.dto.request.AuthRequest;
 import com.rustam.CVFinder.dto.request.LoginRequest;
 import com.rustam.CVFinder.dto.request.RefreshTokenRequest;
+import com.rustam.CVFinder.dto.request.UpdateRequest;
 import com.rustam.CVFinder.dto.response.AuthResponse;
+import com.rustam.CVFinder.dto.response.UpdateResponse;
 import com.rustam.CVFinder.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +39,11 @@ public class AuthenticationController {
     @PostMapping(path = "/refresh-token")
     public ResponseEntity<String> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest){
         return new ResponseEntity<>(authService.refreshToken(refreshTokenRequest),HttpStatus.OK);
+    }
+
+    @PutMapping(path = "/update")
+    public ResponseEntity<UpdateResponse> update(@RequestBody UpdateRequest updateRequest){
+        return new ResponseEntity<>(authService.update(updateRequest),HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping(path = "/logout")
