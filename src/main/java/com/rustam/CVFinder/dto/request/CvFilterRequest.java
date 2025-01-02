@@ -14,4 +14,6 @@ import java.util.List;
 public class CvFilterRequest {
     private List<String> filePaths;
     private String requiredSkill;
+    private String requiredLanguage;
+
 }

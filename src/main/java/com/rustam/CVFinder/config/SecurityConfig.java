@@ -35,6 +35,7 @@ public class SecurityConfig {
                                         "api/v1/auth/logout",
                                         "api/v1/auth/login").permitAll()
                                 .requestMatchers("api/v1/auth/update-hr").hasAuthority(Role.Human_Resource.name())
+                                .requestMatchers("api/v1/auth/update-user").hasAuthority(Role.User.name())
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
