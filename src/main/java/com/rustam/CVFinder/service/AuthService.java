@@ -131,7 +131,10 @@ public class AuthService {
         if (exists) {
             throw new ExistsException("This username is already taken.");
         }
-        authMapper.toUpdated(updateRequest,user);
+        user.setName(updateRequest.getName());
+        user.setUsername(updateRequest.getUsername());
+        user.setEmail(updateRequest.getEmail());
+        user.setPhone(updateRequest.getPhone());
         authRepository.save(user);
         return authMapper.toUpdateResponse(user);
     }
