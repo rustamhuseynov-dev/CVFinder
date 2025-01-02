@@ -7,6 +7,7 @@ import com.rustam.CVFinder.dto.response.AuthResponse;
 import com.rustam.CVFinder.dto.response.UpdateResponse;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
@@ -24,5 +25,4 @@ public interface AuthMapper {
 
     UpdateResponse toUpdateResponse(User user);
 
-    void toUpdated(UpdateRequest updateRequest, User user);
 }
