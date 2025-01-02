@@ -41,9 +41,14 @@ public class AuthenticationController {
         return new ResponseEntity<>(authService.refreshToken(refreshTokenRequest),HttpStatus.OK);
     }
 
-    @PutMapping(path = "/update")
+    @PutMapping(path = "/update-user")
     public ResponseEntity<UpdateResponse> update(@RequestBody UpdateRequest updateRequest){
-        return new ResponseEntity<>(authService.update(updateRequest),HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(authService.updateUser(updateRequest),HttpStatus.ACCEPTED);
+    }
+
+    @PutMapping(path = "/update-hr")
+    public ResponseEntity<UpdateResponse> updateHumanResource(@RequestBody UpdateRequest updateRequest){
+        return new ResponseEntity<>(authService.updateHumanResource(updateRequest),HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping(path = "/logout")
