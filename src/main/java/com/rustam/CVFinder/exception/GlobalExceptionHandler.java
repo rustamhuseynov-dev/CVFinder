@@ -1,10 +1,7 @@
-package com.rustam.CVFinder.exception.handler;
+package com.rustam.CVFinder.exception;
 
 import com.rustam.CVFinder.dto.response.message.ExceptionResponseMessages;
-import com.rustam.CVFinder.exception.custom.BaseUserNotFoundException;
-import com.rustam.CVFinder.exception.custom.IncorrectPasswordException;
-import com.rustam.CVFinder.exception.custom.InvalidUUIDFormatException;
-import com.rustam.CVFinder.exception.custom.UnauthorizedException;
+import com.rustam.CVFinder.exception.custom.*;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +50,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(
                 new ExceptionResponseMessages(ex.getClass().getName(), ex.getMessage(), HttpStatus.CONFLICT),
                 HttpStatus.CONFLICT
+        );
+    }
+
+    @ExceptionHandler(NoAuthotiryException.class)
+    public ResponseEntity<ExceptionResponseMessages> handleUnauthorizedException(NoAuthotiryException ex) {
+        return new ResponseEntity<>(
+                new ExceptionResponseMessages(ex.getClass().getName(), ex.getMessage(), HttpStatus.UNAUTHORIZED) ,
+                HttpStatus.UNAUTHORIZED
         );
     }
 

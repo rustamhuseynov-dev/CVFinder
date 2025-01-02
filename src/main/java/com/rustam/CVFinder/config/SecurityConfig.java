@@ -1,5 +1,6 @@
 package com.rustam.CVFinder.config;
 
+import com.rustam.CVFinder.dao.entity.enums.Role;
 import com.rustam.CVFinder.util.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -30,7 +31,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(x ->
                         x
-                                .requestMatchers("api/v1/auth/**").permitAll()
+                                .requestMatchers("api/v1/auth/create-user",
+                                        "api/v1/auth/logout",
+                                        "api/v1/auth/login").permitAll()
+                                .requestMatchers("api/v1/auth/update-hr").hasAuthority(Role.Human_Resource.name())
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

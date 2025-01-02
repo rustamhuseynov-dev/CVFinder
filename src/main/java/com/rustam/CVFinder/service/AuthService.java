@@ -10,7 +10,10 @@ import com.rustam.CVFinder.dto.TokenPair;
 import com.rustam.CVFinder.dto.request.AuthRequest;
 import com.rustam.CVFinder.dto.request.LoginRequest;
 import com.rustam.CVFinder.dto.request.RefreshTokenRequest;
+import com.rustam.CVFinder.dto.request.UpdateRequest;
 import com.rustam.CVFinder.dto.response.AuthResponse;
+import com.rustam.CVFinder.dto.response.UpdateResponse;
+import com.rustam.CVFinder.exception.custom.ExistsException;
 import com.rustam.CVFinder.exception.custom.IncorrectPasswordException;
 import com.rustam.CVFinder.exception.custom.UnauthorizedException;
 import com.rustam.CVFinder.mapper.AuthMapper;
@@ -18,6 +21,7 @@ import com.rustam.CVFinder.util.UtilService;
 import com.rustam.CVFinder.util.jwt.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,6 +42,7 @@ public class AuthService {
     private final UtilService utilService;
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtUtil jwtUtil;
+    private final ModelMapper modelMapper;
     private final RedisTemplate<String,String> redisTemplate;
 
     public AuthResponse createUser(AuthRequest authRequest) {
@@ -116,5 +121,35 @@ public class AuthService {
         } else {
             throw new UnauthorizedException("Invalid refresh token");
         }
+    }
+
+    public UpdateResponse updateUser(UpdateRequest updateRequest) {
+        String currentUsername = utilService.getCurrentUsername();
+        User user = (User) utilService.findById(updateRequest.getId());
+        utilService.validation(currentUsername, user.getId());
+        boolean exists = utilService.findAllBy().stream()
+                .map(User::getUsername)
+                .anyMatch(existingUsername -> existingUsername.equals(updateRequest.getUsername()));
+        if (exists) {
+            throw new ExistsException("This username is already taken.");
+        }
+        modelMapper.map(updateRequest,user);
+        authRepository.save(user);
+        return authMapper.toUpdateResponse(user);
+    }
+
+    public UpdateResponse updateHumanResource(UpdateRequest updateRequest) {
+        String currentUsername = utilService.getCurrentUsername();
+        HumanResource humanResource = (HumanResource) utilService.findById(updateRequest.getId());
+        utilService.validation(currentUsername, humanResource.getId());
+        boolean exists = utilService.findAllBy().stream()
+                .map(User::getUsername)
+                .anyMatch(existingUsername -> existingUsername.equals(updateRequest.getUsername()));
+        if (exists) {
+            throw new ExistsException("This username is already taken.");
+        }
+        modelMapper.map(updateRequest,humanResource);
+        authRepository.save(humanResource);
+        return authMapper.toUpdateHumanResponse(humanResource);
     }
 }

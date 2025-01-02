@@ -4,7 +4,9 @@ import com.rustam.CVFinder.dto.TokenDTO;
 import com.rustam.CVFinder.dto.request.AuthRequest;
 import com.rustam.CVFinder.dto.request.LoginRequest;
 import com.rustam.CVFinder.dto.request.RefreshTokenRequest;
+import com.rustam.CVFinder.dto.request.UpdateRequest;
 import com.rustam.CVFinder.dto.response.AuthResponse;
+import com.rustam.CVFinder.dto.response.UpdateResponse;
 import com.rustam.CVFinder.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,12 +37,22 @@ public class AuthenticationController {
     }
 
     @PostMapping(path = "/refresh-token")
-    public ResponseEntity<String> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest){
+    public ResponseEntity<String> refreshToken(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest){
         return new ResponseEntity<>(authService.refreshToken(refreshTokenRequest),HttpStatus.OK);
     }
 
+    @PutMapping(path = "/update-user")
+    public ResponseEntity<UpdateResponse> update(@Valid @RequestBody UpdateRequest updateRequest){
+        return new ResponseEntity<>(authService.updateUser(updateRequest),HttpStatus.ACCEPTED);
+    }
+
+    @PutMapping(path = "/update-hr")
+    public ResponseEntity<UpdateResponse> updateHumanResource(@Valid @RequestBody UpdateRequest updateRequest){
+        return new ResponseEntity<>(authService.updateHumanResource(updateRequest),HttpStatus.ACCEPTED);
+    }
+
     @DeleteMapping(path = "/logout")
-    public ResponseEntity<String> logout(@RequestBody RefreshTokenRequest request){
+    public ResponseEntity<String> logout(@Valid @RequestBody RefreshTokenRequest request){
         return new ResponseEntity<>(authService.logout(request),HttpStatus.ACCEPTED);
     }
 }
