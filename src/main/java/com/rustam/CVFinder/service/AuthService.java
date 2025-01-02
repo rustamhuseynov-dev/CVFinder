@@ -21,6 +21,7 @@ import com.rustam.CVFinder.util.UtilService;
 import com.rustam.CVFinder.util.jwt.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,6 +42,7 @@ public class AuthService {
     private final UtilService utilService;
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtUtil jwtUtil;
+    private final ModelMapper modelMapper;
     private final RedisTemplate<String,String> redisTemplate;
 
     public AuthResponse createUser(AuthRequest authRequest) {
@@ -131,29 +133,23 @@ public class AuthService {
         if (exists) {
             throw new ExistsException("This username is already taken.");
         }
-        user.setName(updateRequest.getName());
-        user.setUsername(updateRequest.getUsername());
-        user.setEmail(updateRequest.getEmail());
-        user.setPhone(updateRequest.getPhone());
+        modelMapper.map(updateRequest,user);
         authRepository.save(user);
         return authMapper.toUpdateResponse(user);
     }
 
     public UpdateResponse updateHumanResource(UpdateRequest updateRequest) {
         String currentUsername = utilService.getCurrentUsername();
-        User user = (User) utilService.findById(updateRequest.getId());
-        utilService.validation(currentUsername, user.getId());
+        HumanResource humanResource = (HumanResource) utilService.findById(updateRequest.getId());
+        utilService.validation(currentUsername, humanResource.getId());
         boolean exists = utilService.findAllBy().stream()
                 .map(User::getUsername)
                 .anyMatch(existingUsername -> existingUsername.equals(updateRequest.getUsername()));
         if (exists) {
             throw new ExistsException("This username is already taken.");
         }
-        user.setName(updateRequest.getName());
-        user.setUsername(updateRequest.getUsername());
-        user.setEmail(updateRequest.getEmail());
-        user.setPhone(updateRequest.getPhone());
-        authRepository.save(user);
-        return authMapper.toUpdateResponse(user);
+        modelMapper.map(updateRequest,humanResource);
+        authRepository.save(humanResource);
+        return authMapper.toUpdateHumanResponse(humanResource);
     }
 }
