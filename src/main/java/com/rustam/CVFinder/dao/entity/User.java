@@ -22,6 +22,4 @@ public class User extends BaseUser {
 
     @Column(unique = true)
     private String username;
-
-    private File enterYourCV;
 }
