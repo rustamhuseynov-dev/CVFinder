@@ -25,4 +25,5 @@ public interface AuthMapper {
 
     UpdateResponse toUpdateResponse(User user);
 
+    UpdateResponse toUpdateHumanResponse(HumanResource humanResource);
 }
