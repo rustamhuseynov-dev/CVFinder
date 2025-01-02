@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -15,4 +16,6 @@ public interface AuthRepository extends JpaRepository<BaseUser, UUID> {
 
     @Query(value = "SELECT * FROM base_users WHERE (user_type = 'USER' OR user_type = 'HUMAN_RESOURCE') AND username = :username", nativeQuery = true)
     Optional<BaseUser> findByUsername(String username);
+
+    List<User> findAllBy();
 }
