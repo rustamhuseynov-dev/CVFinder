@@ -2,7 +2,9 @@ package com.rustam.CVFinder.mapper;
 
 import com.rustam.CVFinder.dao.entity.HumanResource;
 import com.rustam.CVFinder.dao.entity.User;
+import com.rustam.CVFinder.dto.request.UpdateRequest;
 import com.rustam.CVFinder.dto.response.AuthResponse;
+import com.rustam.CVFinder.dto.response.UpdateResponse;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -19,4 +21,8 @@ public interface AuthMapper {
     AuthResponse toDto(User user);
 
     AuthResponse toDto(HumanResource humanResource);
+
+    UpdateResponse toUpdateResponse(User user);
+
+    void toUpdated(UpdateRequest updateRequest, User user);
 }
