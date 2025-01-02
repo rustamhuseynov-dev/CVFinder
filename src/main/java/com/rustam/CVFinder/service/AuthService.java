@@ -121,7 +121,25 @@ public class AuthService {
         }
     }
 
-    public UpdateResponse update(UpdateRequest updateRequest) {
+    public UpdateResponse updateUser(UpdateRequest updateRequest) {
+        String currentUsername = utilService.getCurrentUsername();
+        User user = (User) utilService.findById(updateRequest.getId());
+        utilService.validation(currentUsername, user.getId());
+        boolean exists = utilService.findAllBy().stream()
+                .map(User::getUsername)
+                .anyMatch(existingUsername -> existingUsername.equals(updateRequest.getUsername()));
+        if (exists) {
+            throw new ExistsException("This username is already taken.");
+        }
+        user.setName(updateRequest.getName());
+        user.setUsername(updateRequest.getUsername());
+        user.setEmail(updateRequest.getEmail());
+        user.setPhone(updateRequest.getPhone());
+        authRepository.save(user);
+        return authMapper.toUpdateResponse(user);
+    }
+
+    public UpdateResponse updateHumanResource(UpdateRequest updateRequest) {
         String currentUsername = utilService.getCurrentUsername();
         User user = (User) utilService.findById(updateRequest.getId());
         utilService.validation(currentUsername, user.getId());
